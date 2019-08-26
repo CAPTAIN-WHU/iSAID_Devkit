@@ -1,2 +1,1 @@
-Note that these are just some sample images. 
-
+   Note that these are just some sample images.
