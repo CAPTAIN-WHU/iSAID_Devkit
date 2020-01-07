@@ -80,9 +80,10 @@ def convert_cityscapes_instance_only(data_dir, out_dir):
         annotations = []
         ann_dir = os.path.join(data_dir, ann_dir)
         print(ann_dir)
+        img_id = 0 #re-initiate the image id
         for root, _, files in os.walk(ann_dir):
             for filename in natsorted(files):
-                if re.match(r'\w*\d+.png', filename) and filename.split('.')[0].count('_')==4:
+                if re.match(r'\w*\d+.png', filename) or filename.split('.')[0].count('_')==4: #Take splits and original image(less than 800)
                     if len(images) % 50 == 0:
                         print("Processed %s images, %s annotations" % (
                             len(images), len(annotations)))
