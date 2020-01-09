@@ -19,6 +19,7 @@ import random
 random.seed(0)
 
 import cityscapesScripts.cityscapesscripts.evaluation.instances2dict_with_polygons as cs
+from cityscapesScripts.cityscapesscripts.helpers.labels import *
 import detectron.utils.segms as segms_util
 import detectron.utils.boxes as bboxs_util
 
@@ -129,8 +130,7 @@ def convert_cityscapes_instance_only(data_dir, out_dir):
                                 ann['segmentation'] = obj['contours']
 
                                 if object_cls not in category_dict:
-                                    category_dict[object_cls] = cat_id
-                                    cat_id += 1
+                                    category_dict[object_cls] = label2id[object_cls]
                                 ann['category_id'] = category_dict[object_cls]
                                 ann['category_name'] = object_cls
                                 ann['iscrowd'] = 0
