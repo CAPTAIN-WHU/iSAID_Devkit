@@ -57,7 +57,7 @@ for mode1 in modes1:
     files = [os.path.split(i)[-1].split('.')[0] for i in files if '_' not in os.path.split(i)[-1]]
     files = natsorted(files)
 
-    for file_ in natsorted(files):
+    for file_ in files:
         if file_ == 'P1527' or file_ == 'P1530':
             continue
         for extra in extras:

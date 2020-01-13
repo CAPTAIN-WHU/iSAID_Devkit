@@ -21,7 +21,7 @@ random.seed(0)
 import cityscapesScripts.cityscapesscripts.evaluation.instances2dict_with_polygons as cs
 import detectron.utils.segms as segms_util
 import detectron.utils.boxes as bboxs_util
-
+from cityscapesScripts.cityscapesscripts.helpers.labels import *
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Convert dataset')
@@ -57,6 +57,7 @@ def convert_cityscapes_instance_only(data_dir, out_dir):
     category_dict = {}
 
     category_instancesonly = [
+        'unlabeled',
         'ship',
         'storage_tank',
         'baseball_diamond',
@@ -80,12 +81,21 @@ def convert_cityscapes_instance_only(data_dir, out_dir):
         annotations = []
         ann_dir = os.path.join(data_dir, ann_dir)
         print(ann_dir)
+        img_id = 0 # for every image_id with different indexing
+        c_images = 0
         for root, _, files in os.walk(ann_dir):
             for filename in natsorted(files):
-                if re.match(r'\w*\d+.png', filename) and filename.split('.')[0].count('_')==4:
-                    if len(images) % 50 == 0:
-                        print("Processed %s images, %s annotations" % (
-                            len(images), len(annotations)))
+                if filename.endswith('_color_RGB.png'): #if re.match(r'\w*\d+.png', filename) or filename.split('.')[0].count('_')==4:
+                    #import pdb;pdb.set_trace()
+                    c_images+=1
+                    filename = ''.join(filename)
+                    filename = filename.split('_')[:-3]
+                    if len(filename) > 1:
+                        filename = '_'.join(filename)
+                    else:
+                        filename = ''.join(filename)
+                    filename = filename + '.png'
+                    print("Processed %s images" % (c_images))
                     image_dim = cv2.imread(os.path.join(root,filename))
                     imgHeight,imgWidth,_  = image_dim.shape
                     image = {}
@@ -126,19 +136,18 @@ def convert_cityscapes_instance_only(data_dir, out_dir):
                                 ann_id += 1
                                 ann['image_id'] = image['id']
                                 ann['segmentation'] = obj['contours']
-
                                 if object_cls not in category_dict:
-                                    category_dict[object_cls] = cat_id
-                                    cat_id += 1
+                                    category_dict[object_cls] = label2id[object_cls]
+
                                 ann['category_id'] = category_dict[object_cls]
                                 ann['category_name'] = object_cls
                                 ann['iscrowd'] = 0
                                 ann['area'] = obj['pixelCount']
-                                ann['bbox'] = bboxs_util.xyxy_to_xywh(
-                                    segms_util.polys_to_boxes(
-                                        [ann['segmentation']])).tolist()[0]
+                                ann['bbox'] = bboxs_util.xyxy_to_xywh(segms_util.polys_to_boxes([ann['segmentation']])).tolist()[0]
 
-                                annotations.append(ann)
+                                #annotations.append(ann)
+                                if ann['area'] > 10:
+                                    annotations.append(ann)
 
         ann_dict['images'] = images
         categories = [{"id": category_dict[name], "name": name} for name in category_dict]

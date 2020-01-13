@@ -18,6 +18,7 @@
     5. Setup detectron for the evalaution server
              - `cd preprocess/Detectron`
              - `make`
+    6. Note: opencv version == 3.4.2
              
 2.  **Data Preparation for Training, Validation and Testing**
     1. Please download iSAID dataset that contains image segmentation masks. Also, download original images from DOTA dataset. 
