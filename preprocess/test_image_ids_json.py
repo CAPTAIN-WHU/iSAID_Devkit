@@ -54,26 +54,8 @@ def convert_cityscapes_instance_only(data_dir, out_dir):
     img_id = 0
     ann_id = 0
     cat_id = 1
-    category_dict = {}
-
-    category_instancesonly = [
-        'unlabeled',
-        'ship',
-        'storage_tank',
-        'baseball_diamond',
-        'tennis_court',
-        'basketball_court',
-        'Ground_Track_Field',
-        'Bridge',
-        'Large_Vehicle',
-        'Small_Vehicle',
-        'Helicopter',
-        'Swimming_pool',
-        'Roundabout',
-        'Soccer_ball_field',
-        'plane',
-        'Harbor'
-    ]
+    #NOTE : The following mentioned category order must be mentained during validation and testing time
+    category_dict = [{'id': 1, 'name': 'ship'},{'id': 2, 'name': 'storage_tank'},{'id': 3, 'name': 'baseball_diamond'},{'id': 4, 'name': 'tennis_court'},{'id': 5, 'name': 'basketball_court'},{'id': 6, 'name': 'Ground_Track_Field'},{'id': 7, 'name': 'Bridge'},{'id': 8, 'name': 'Large_Vehicle'},{'id': 9, 'name': 'Small_Vehicle'},{'id': 10, 'name': 'Helicopter'},{'id': 11, 'name': 'Swimming_pool'},{'id': 12, 'name': 'Roundabout'},{'id': 13, 'name': 'Soccer_ball_field'},{'id': 14, 'name': 'plane'},{'id': 15, 'name': 'Harbor'}]
     for data_set, ann_dir in zip(sets, ann_dirs):
         print('Starting %s' % data_set)
         ann_dict = {}
@@ -101,7 +83,9 @@ def convert_cityscapes_instance_only(data_dir, out_dir):
                     images.append(image)
 
         ann_dict['images'] = images
-        categories = [{"id": category_dict[name], "name": name} for name in category_dict]
+        import pdb;pdb.set_trace()
+        #categories = [{"id": category_dict[name], "name": name} for name in category_dict]
+        categories = category_dict
         ann_dict['categories'] = categories
         print("Num categories: %s" % len(categories))
         print("Num images: %s" % len(images))
