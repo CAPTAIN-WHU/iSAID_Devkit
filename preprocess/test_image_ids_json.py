@@ -98,6 +98,7 @@ def convert_cityscapes_instance_only(data_dir, out_dir):
                     print("Processing Image",filename)
                     image['file_name'] = filename.split('.')[0] + '.png'
                     print("Processing Image",image['file_name'])
+                    images.append(image)
 
         ann_dict['images'] = images
         categories = [{"id": category_dict[name], "name": name} for name in category_dict]
